@@ -15,6 +15,17 @@ Bone::Bone() {
 	debugColor.set(ofRandomf(), ofRandomf(), ofRandomf());
 }
 
+void Bone::init(XnSkeletonJoint xnJointId, ofQuaternion bindPoseRot) {
+	
+	this->xnJointId = xnJointId;
+	
+	bindPose.setRotate(bindPoseRot);
+}
+
+void Bone::updateCalibPose(){
+	calibPose.makeInvertOf( getGlobalTransformMatrix() );
+}
+
 void Bone::customDraw() {
 	
 	ofSetColor(255, 255, 255);

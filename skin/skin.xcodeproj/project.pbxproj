@@ -14,11 +14,14 @@
 		C65E04DF12E0278200A90347 /* ofxOpenNIRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C65E04D412E0278200A90347 /* ofxOpenNIRecorder.cpp */; };
 		C65E04E012E0278200A90347 /* ofxTrackedUser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C65E04D712E0278200A90347 /* ofxTrackedUser.cpp */; };
 		C65E04E112E0278200A90347 /* ofxUserGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C65E04D912E0278200A90347 /* ofxUserGenerator.cpp */; };
+		C66AA8A41328F65000C5A48A /* pointcloud.frag in Sources */ = {isa = PBXBuildFile; fileRef = C66AA8A21328F65000C5A48A /* pointcloud.frag */; };
+		C66AA8A51328F65000C5A48A /* pointcloud.vert in Sources */ = {isa = PBXBuildFile; fileRef = C66AA8A31328F65000C5A48A /* pointcloud.vert */; };
+		C66B6457131FAF83007CDA2F /* ofxQtVideoSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C66B6455131FAF83007CDA2F /* ofxQtVideoSaver.cpp */; };
 		C6A4587213164FF200918FDE /* UserPointCloud.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6A4587113164FF200918FDE /* UserPointCloud.cpp */; };
-		C6A459091316595E00918FDE /* userpointcloud.frag in Sources */ = {isa = PBXBuildFile; fileRef = C6A459071316595E00918FDE /* userpointcloud.frag */; };
-		C6A4590A1316595E00918FDE /* userpointcloud.vert in Sources */ = {isa = PBXBuildFile; fileRef = C6A459081316595E00918FDE /* userpointcloud.vert */; };
 		C6A45E74131673BB00918FDE /* Bone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6A45E73131673BB00918FDE /* Bone.cpp */; };
 		C6A45FCC131893BF00918FDE /* PointCloud.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6A45FCB131893BF00918FDE /* PointCloud.cpp */; };
+		C6E2BFDD132634F0002D4844 /* userpointcloud.frag in Sources */ = {isa = PBXBuildFile; fileRef = C6E2BFDB132634F0002D4844 /* userpointcloud.frag */; };
+		C6E2BFDE132634F0002D4844 /* userpointcloud.vert in Sources */ = {isa = PBXBuildFile; fileRef = C6E2BFDC132634F0002D4844 /* userpointcloud.vert */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
 		E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9730E8CC7DD009D7055 /* AudioToolbox.framework */; };
@@ -145,16 +148,20 @@
 		C65E04D812E0278200A90347 /* ofxTrackedUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTrackedUser.h; sourceTree = "<group>"; };
 		C65E04D912E0278200A90347 /* ofxUserGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUserGenerator.cpp; sourceTree = "<group>"; };
 		C65E04DA12E0278200A90347 /* ofxUserGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUserGenerator.h; sourceTree = "<group>"; };
+		C66AA8A21328F65000C5A48A /* pointcloud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = pointcloud.frag; sourceTree = "<group>"; };
+		C66AA8A31328F65000C5A48A /* pointcloud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = pointcloud.vert; sourceTree = "<group>"; };
+		C66B6455131FAF83007CDA2F /* ofxQtVideoSaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxQtVideoSaver.cpp; sourceTree = "<group>"; };
+		C66B6456131FAF83007CDA2F /* ofxQtVideoSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxQtVideoSaver.h; sourceTree = "<group>"; };
 		C6A4587013164FF200918FDE /* UserPointCloud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPointCloud.h; sourceTree = "<group>"; };
 		C6A4587113164FF200918FDE /* UserPointCloud.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserPointCloud.cpp; sourceTree = "<group>"; };
-		C6A459071316595E00918FDE /* userpointcloud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = userpointcloud.frag; sourceTree = "<group>"; };
-		C6A459081316595E00918FDE /* userpointcloud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = userpointcloud.vert; sourceTree = "<group>"; };
 		C6A4594213165B6F00918FDE /* skinDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = skinDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6A45E72131673BB00918FDE /* Bone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bone.h; sourceTree = "<group>"; };
 		C6A45E73131673BB00918FDE /* Bone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bone.cpp; sourceTree = "<group>"; };
 		C6A45E781316790000918FDE /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		C6A45FCA131893BF00918FDE /* PointCloud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointCloud.h; sourceTree = "<group>"; };
 		C6A45FCB131893BF00918FDE /* PointCloud.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PointCloud.cpp; sourceTree = "<group>"; };
+		C6E2BFDB132634F0002D4844 /* userpointcloud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = userpointcloud.frag; sourceTree = "<group>"; };
+		C6E2BFDC132634F0002D4844 /* userpointcloud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = userpointcloud.vert; sourceTree = "<group>"; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
 		E45BE9730E8CC7DD009D7055 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
@@ -204,6 +211,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				C66B6454131FAF83007CDA2F /* ofxQtVideoSaver */,
 				C62152501310FC9000D032EF /* ofxVectorMath */,
 				C6CA790512E02072006A85BB /* ofxOpenNI */,
 			);
@@ -350,15 +358,15 @@
 			path = ../../../addons/ofxOpenNI/src;
 			sourceTree = SOURCE_ROOT;
 		};
-		C6A459001316585400918FDE /* shaders */ = {
+		C66B6454131FAF83007CDA2F /* ofxQtVideoSaver */ = {
 			isa = PBXGroup;
 			children = (
-				C6A459071316595E00918FDE /* userpointcloud.frag */,
-				C6A459081316595E00918FDE /* userpointcloud.vert */,
+				C66B6455131FAF83007CDA2F /* ofxQtVideoSaver.cpp */,
+				C66B6456131FAF83007CDA2F /* ofxQtVideoSaver.h */,
 			);
-			name = shaders;
-			path = bin/data/shaders;
-			sourceTree = "<group>";
+			name = ofxQtVideoSaver;
+			path = ../../../addons/ofxQtVideoSaver;
+			sourceTree = SOURCE_ROOT;
 		};
 		C6CA790512E02072006A85BB /* ofxOpenNI */ = {
 			isa = PBXGroup;
@@ -369,6 +377,19 @@
 			name = ofxOpenNI;
 			path = ..;
 			sourceTree = SOURCE_ROOT;
+		};
+		C6E2BFDA132634F0002D4844 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				C6E2BFDB132634F0002D4844 /* userpointcloud.frag */,
+				C6E2BFDC132634F0002D4844 /* userpointcloud.vert */,
+				C66AA8A21328F65000C5A48A /* pointcloud.frag */,
+				C66AA8A31328F65000C5A48A /* pointcloud.vert */,
+				E4B69E1C0A3A1BDC003C02F2 /* src */,
+			);
+			name = shaders;
+			path = bin/data/shaders;
+			sourceTree = "<group>";
 		};
 		E45BE5980E8CC70C009D7055 /* frameworks */ = {
 			isa = PBXGroup;
@@ -394,8 +415,7 @@
 			isa = PBXGroup;
 			children = (
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
-				E4B69E1C0A3A1BDC003C02F2 /* src */,
-				C6A459001316585400918FDE /* shaders */,
+				C6E2BFDA132634F0002D4844 /* shaders */,
 				E4C2422310CC54B6004149E2 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
@@ -528,10 +548,13 @@
 				C65E04E012E0278200A90347 /* ofxTrackedUser.cpp in Sources */,
 				C65E04E112E0278200A90347 /* ofxUserGenerator.cpp in Sources */,
 				C6A4587213164FF200918FDE /* UserPointCloud.cpp in Sources */,
-				C6A459091316595E00918FDE /* userpointcloud.frag in Sources */,
-				C6A4590A1316595E00918FDE /* userpointcloud.vert in Sources */,
 				C6A45E74131673BB00918FDE /* Bone.cpp in Sources */,
 				C6A45FCC131893BF00918FDE /* PointCloud.cpp in Sources */,
+				C66B6457131FAF83007CDA2F /* ofxQtVideoSaver.cpp in Sources */,
+				C6E2BFDD132634F0002D4844 /* userpointcloud.frag in Sources */,
+				C6E2BFDE132634F0002D4844 /* userpointcloud.vert in Sources */,
+				C66AA8A41328F65000C5A48A /* pointcloud.frag in Sources */,
+				C66AA8A51328F65000C5A48A /* pointcloud.vert in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,18 +11,23 @@
 
 PointCloud::PointCloud() {
 	
-	allocated = false;
-	
 	numUserPixels=0;
 	
-	//shader.setup("userpointcloud");
+	mesh.primitives.push_back(ofPrimitive());
+	data = &mesh.primitives[0];
+	data->setMode(OF_TRIANGLES_MODE);
+	
+	setMesh(&mesh);
+	setRenderMethod(OF_MESH_USING_VBO);
+	setDrawType(GL_DYNAMIC_DRAW);
+	
+	
+	shaderFile = "shaders/pointcloud";
 }
 
 PointCloud::~PointCloud() {
 	
-	if(allocated) {
-		//delete[] vertices;
-	}
+	
 }
 
 void PointCloud::init(ofxDepthGenerator& depth, ofxImageGenerator& image, ofxUserGenerator& user, int type) {
@@ -32,6 +37,9 @@ void PointCloud::init(ofxDepthGenerator& depth, ofxImageGenerator& image, ofxUse
 	this->image = &image;
 	this->type = type;
 	
+	img.loadImage("test.jpg");
+	
+	shader.setup(shaderFile);
 }
 
 void PointCloud::update() {
@@ -44,19 +52,31 @@ void PointCloud::update() {
 	
 	numUserPixels=0;
 	
+	data->clear();
+	
 	if (type==POINTCLOUD_SCENE || type==POINTCLOUD_BG && !bUserInScene) {
 		
 		for (int y=0; y < 480; y++) { 
 			for (int x=0; x < 640; x++, depthPixels++, texture+=3){
-								
+				
+				int i = y*640+x;
+				
 				projective[numUserPixels].X = x; 
 				projective[numUserPixels].Y = y;
 				projective[numUserPixels].Z = *depthPixels;
 				
-				colors[numUserPixels].r = imagePixels[texture] / 255.f;
-				colors[numUserPixels].g = imagePixels[texture+1] / 255.f;
-				colors[numUserPixels].b = imagePixels[texture+2] / 255.f;
-					
+				//data->addColor(ofColor(imagePixels[texture]/255.f, imagePixels[texture+1]/255.f, imagePixels[texture+2]/255.f));
+				
+				/*
+				 faces.push_back(Face(	&vertices[pos],
+										&vertices[pos+1],
+										&vertices[pos+numVertsW+1]));
+				 
+				 faces.push_back(Face(	&vertices[pos],
+										&vertices[pos+numVertsW+1],
+										&vertices[pos+numVertsW]));
+				 */
+				
 				numUserPixels++;
 			}
 		}
@@ -81,11 +101,9 @@ void PointCloud::update() {
 					
 					projective[numUserPixels].X = x; 
 					projective[numUserPixels].Y = y;
-					projective[numUserPixels].Z = *depthPixels;
+					projective[numUserPixels].Z = *depthPixels ;
 					
-					colors[numUserPixels].r = imagePixels[texture] / 255.f;
-					colors[numUserPixels].g = imagePixels[texture+1] / 255.f;
-					colors[numUserPixels].b = imagePixels[texture+2] / 255.f;
+					//data->addColor(ofColor(imagePixels[texture]/255.f, imagePixels[texture+1]/255.f, imagePixels[texture+2]/255.f));
 					
 					numUserPixels++;
 				}
@@ -99,21 +117,57 @@ void PointCloud::update() {
 	
 	depth->getXnDepthGenerator().ConvertProjectiveToRealWorld(numUserPixels, projective, realworld);
 	
+	bool isUserCloud = !(type==POINTCLOUD_SCENE || type==POINTCLOUD_BG && !bUserInScene);
+	
+	XnPoint3D * pt;
 	for(int i=0; i<numUserPixels; i++) {
-		vertices[i].x = realworld[i].X;
-		vertices[i].y = realworld[i].Y;
-		vertices[i].z = realworld[i].Z;
+		
+		pt = &realworld[i];
+		data->addVertex(ofPoint(pt->X, pt->Y, pt->Z));
+		data->addTexCoord(ofVec2f(projective[i].X, projective[i].Y));
+		
+		if(!isUserCloud) {
+			
+			int x = (int)projective[i].X;
+			int y = (int)projective[i].Y;
+			int pos = y*640+x;
+			
+			if(pos>640*480-640-1) continue;
+			
+			if( realworld[pos].Z!=0 && realworld[pos+1].Z!=0 && realworld[pos+640+1].Z!=0) {
+			
+			data->addIndex(i);
+			data->addIndex(i+1);
+			data->addIndex(i+640+1);			
+			
+			data->addIndex(i);
+			data->addIndex(i+640+1);
+			data->addIndex(i+640);
+		}
 	}
-	
-	vbo.setVertexData(vertices, numUserPixels, GL_DYNAMIC_DRAW);
-	vbo.setColorData(colors, numUserPixels, GL_STATIC_DRAW);	
-	
-	allocated = true;
 }
 
 void PointCloud::draw() {
 	
-	if(!allocated) return;
+	//enableColors();
 	
-	vbo.draw(GL_POINTS, 0, numUserPixels);
+	enableTexCoords();
+	enableIndices();
+	
+	shader.begin();
+	
+	int texCoordAttLoc = shader.getAttributeLocation("aTextureCoords");
+	glEnableVertexAttribArray(texCoordAttLoc);
+	glVertexAttribPointer(texCoordAttLoc, 2, GL_FLOAT, false, 0, data->getTexCoordsPointer());
+	glBindAttribLocation(shader.getProgram(), texCoordAttLoc, "aTextureCoords");
+	
+	//img.getTextureReference().bind();
+	int texLoc = glGetUniformLocation(shader.getProgram(), "tex");
+	shader.setUniformTexture("tex", img.getTextureReference(), texLoc);
+	
+	ofMeshRenderer::draw(&mesh, OF_MESH_FILL);
+	
+	//img.getTextureReference().unbind();
+	
+	shader.end();
 }

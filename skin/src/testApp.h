@@ -4,11 +4,14 @@
 #include "ofMain.h"
 #include "ofxOpenNI.h"
 
+#include "ofxQtVideoSaver.h"
+
 #include "UserPointCloud.h"
 #include "Bone.h"
 #include "Global.h"
 
 #define PLAYBACK
+//#define EXPORT_VIDEO
 
 using namespace xn;
 
@@ -19,8 +22,9 @@ public:
 	void setup();
 	void update();
 	void draw();
+	void exit();
 	void keyPressed(int key);
-			
+	
 	ofxOpenNIContext	context;
 	ofxImageGenerator	image;
 	ofxDepthGenerator	depth;
@@ -40,6 +44,9 @@ private:
 	
 	bool bOrbit, bDebug, bRecord, bRecordBackground;
 	int distance;
+	
+	ofxQtVideoSaver videoSaver;
+	ofImage screen;
 	
 	float camFOV;
 };

@@ -19,7 +19,7 @@ void testApp::setup(){
 	user.setup(&context, &depth, &image);
 	depth.toggleRegisterViewport(&image);
 	context.toggleMirror();
-
+	
 #ifndef PLAYBACK
 	recorder.setup(&context, &depth, &image);
 #endif
@@ -27,6 +27,12 @@ void testApp::setup(){
 	userPointCloud.init(depth, image, user);
 	bgPointCloud.init(depth, image, user, POINTCLOUD_SCENE);
 	scenePointCloud.init(depth, image, user, POINTCLOUD_SCENE);
+	
+#ifdef EXPORT_VIDEO
+	screen.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR);
+	videoSaver.setCodecQualityLevel(OF_QT_SAVER_CODEC_QUALITY_HIGH);
+	videoSaver.setup(ofGetWidth(), ofGetHeight(), "test_Export.mov");
+#endif
 	
 	ofSetLogLevel(OF_LOG_WARNING);
 	ofDisableArbTex();
@@ -40,6 +46,12 @@ void testApp::setup(){
 	
 	camera.setFov(camFOV);
 	camera.setFarClip(10000.f);
+}
+
+void testApp::exit() {
+#ifdef EXPORT_VIDEO
+	videoSaver.finishMovie();
+#endif
 }
 
 //--------------------------------------------------------------
@@ -82,7 +94,7 @@ void testApp::draw(){
 	// setup scene Rendering
 	
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 		
 	camera.begin();
 	
@@ -90,19 +102,23 @@ void testApp::draw(){
 		scenePointCloud.draw();
 	} else {
 		bgPointCloud.draw();
-		userPointCloud.draw();
+		userPointCloud.draw(bDebug);
 	}
 	
 	camera.end();
 		
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
+	//glDisable(GL_CULL_FACE);
 	
 	if (bRecord) {
 		ofSetColor(255, 0, 0);
 		ofCircle(15, 15, 10);
 		ofSetColor(255, 255, 255);
 	}
+#ifdef EXPORT_VIDEO
+	screen.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+	videoSaver.addFrame(screen.getPixels(), 1.0 / 28.0);
+#endif
 	ofDrawBitmapString(ofToString(ofGetFrameRate(), 2), 5, 5);
 }
 

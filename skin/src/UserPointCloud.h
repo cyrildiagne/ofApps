@@ -27,22 +27,24 @@ public:
 	
 	void update();
 	
-	void draw();
+	void draw(bool bDrawBones);
 	
 	bool bBonesInit;
 	
 private:
 	
+	void initBones();
+	void initVerticesWeights();
+	
+	void setBonesLengths();
+	void setBoneLength(int boneId, XnSkeletonJoint endBone);
+	
 	void updateBones();
 	
-	void initBindPose();
-	void initBonesWeights();
-	void transformNode(int nodeNum, XnSkeletonJoint skelJoint);
-	
-	int *verticesBonesId;
-	ofMatrix4x4 *verticesBindMatrices;
-	ofVec3f * finalVerts;
+	float * verticesBonesId;
 	
 	Bone	bones[kNumTestNodes];
+	
 	int numBones;
+	
 };

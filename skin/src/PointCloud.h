@@ -10,6 +10,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofModel.h"
 #include "ofxOpenNI.h"
 #include "Global.h"
 
@@ -19,7 +20,7 @@ using namespace xn;
 #define POINTCLOUD_BG	 2
 #define POINTCLOUD_USER	 3
 
-class PointCloud {
+class PointCloud : public ofMeshRenderer {
 	
 public:
 	
@@ -32,19 +33,24 @@ public:
 	
 	int numUserPixels;
 	int type;
-	bool allocated;
+	
+	string shaderFile;
+	
+	ofImage img;
 	
 protected:
 	
 	ofxDepthGenerator * depth;
 	ofxUserGenerator * user;
 	ofxImageGenerator * image;
+
+	ofMesh mesh;
+	ofPrimitive * data;
 	
-	XnVector3D realworld[640*480];
-	XnVector3D projective[640*480];
-	ofColor colors[640*480];
-	ofVec3f vertices[640*480];
-	
-	ofVbo vbo;
 	ofShader shader;
+
+private:
+	
+	XnVector3D	realworld	[640*480];
+	XnVector3D	projective	[640*480];
 };

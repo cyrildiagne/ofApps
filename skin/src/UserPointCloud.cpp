@@ -12,46 +12,78 @@
 UserPointCloud::UserPointCloud() {
 	
 	verticesBonesId = NULL;
-	verticesBindMatrices = NULL;
-	finalVerts = NULL;
-	
 	bBonesInit = false;
 }
 
 void UserPointCloud::init(ofxDepthGenerator& depth, ofxImageGenerator& image, ofxUserGenerator& user) {
 	
+	shaderFile = "shaders/userpointcloud";
+	
 	PointCloud::init(depth, image, user, POINTCLOUD_USER);
 }
 
-void UserPointCloud::initBindPose() {
+void UserPointCloud::update() {
 	
-	for(int i=0; i<kNumTestNodes; i++) {
-		
-		// setup a traditional humanoid bind pose
-		ofQuaternion q;
-		if(i==LEFT_SHOULDER||i==LEFT_ELBOW){
-			q.makeRotate(-90.0, ofVec3f(0.0f, 0.0f, 1.0f));
-		} else if(i==RIGHT_SHOULDER||i==RIGHT_ELBOW){
-			q.makeRotate(90.0, ofVec3f(0.0f, 0.0f, 1.0f));
-		} else if(i==NECK){
-			q.makeRotate(180.0, ofVec3f(0.0f, 0.0f, 1.0f));
-		} else {
-			q.makeRotate(0, 0, 0, 1);
-		}
-		bones[i].bindPose.setRotate(q);
+	if (user->getTrackedUsers().size()>0) {
+		if(!bBonesInit) initBones();
+		else updateBones();
 	}
 }
 
-void UserPointCloud::initBonesWeights() {
+void UserPointCloud::initBones() {
 	
-	if(verticesBonesId!=NULL) {
-		delete[] verticesBonesId;
-		delete[] verticesBindMatrices;
-		delete[] finalVerts;
-	}
-	verticesBonesId = new int[numUserPixels];
-	verticesBindMatrices = new ofMatrix4x4[numUserPixels];
-	finalVerts = new ofVec3f[numUserPixels];
+	// First retrieve the points of the user
+	PointCloud::update();
+	
+	ofVec3f zAxis = ofVec3f(0.0f, 0.0f, 1.0f);
+	
+	ofQuaternion qDefault	= ofQuaternion( 0	 , zAxis);
+	ofQuaternion qLeft		= ofQuaternion(-90.0 , zAxis);
+	ofQuaternion qRight		= ofQuaternion( 90.0 , zAxis);
+	ofQuaternion qNeck		= ofQuaternion( 180.0, zAxis);
+	
+	bones[TORSO]		 .init( XN_SKEL_TORSO,			qDefault);
+	bones[WAIST]		 .init( XN_SKEL_WAIST,			qDefault);
+	bones[LEFT_SHOULDER] .init( XN_SKEL_LEFT_SHOULDER,	qLeft);
+	bones[LEFT_ELBOW]	 .init( XN_SKEL_LEFT_ELBOW,		qLeft);
+	bones[RIGHT_SHOULDER].init( XN_SKEL_RIGHT_SHOULDER,	qRight);
+	bones[RIGHT_ELBOW]	 .init( XN_SKEL_RIGHT_ELBOW,	qRight);
+	bones[LEFT_HIP]		 .init( XN_SKEL_LEFT_HIP,		qDefault);
+	bones[RIGHT_HIP]	 .init( XN_SKEL_RIGHT_HIP,		qDefault);
+	bones[LEFT_KNEE]	 .init( XN_SKEL_LEFT_KNEE,		qDefault);
+	bones[RIGHT_KNEE]	 .init( XN_SKEL_RIGHT_KNEE,		qDefault);
+	bones[NECK]			 .init( XN_SKEL_NECK,			qNeck);
+	
+	// Update the bones
+	updateBones();
+	
+	for(int i=0; i<kNumTestNodes; i++)
+		bones[i].updateCalibPose();
+	
+	setBonesLengths();
+	
+	initVerticesWeights();
+	
+	bBonesInit = true;
+}
+
+
+void UserPointCloud::setBonesLengths() {
+	
+	setBoneLength(NECK,			 XN_SKEL_NECK);
+	setBoneLength(LEFT_SHOULDER, XN_SKEL_LEFT_ELBOW);
+	setBoneLength(LEFT_ELBOW,	 XN_SKEL_LEFT_HAND);
+	setBoneLength(RIGHT_SHOULDER,XN_SKEL_RIGHT_ELBOW);
+	setBoneLength(RIGHT_ELBOW,	 XN_SKEL_RIGHT_HAND);	
+	setBoneLength(LEFT_HIP,		 XN_SKEL_LEFT_KNEE);
+	setBoneLength(LEFT_KNEE,	 XN_SKEL_LEFT_FOOT);
+	setBoneLength(RIGHT_HIP,	 XN_SKEL_RIGHT_KNEE);
+	setBoneLength(RIGHT_KNEE,	 XN_SKEL_RIGHT_FOOT);
+}
+
+void UserPointCloud::initVerticesWeights() {
+	
+	verticesBonesId = new float[numUserPixels];
 	
 	float sqDist, minDist;
 	
@@ -62,7 +94,7 @@ void UserPointCloud::initBonesWeights() {
 		
 		for (int j=0; j<11; j++) {
 			
-			sqDist = bones[j].getPositionAlong(1).squareDistance(vertices[i]);
+			sqDist = bones[j].getPositionAlong(0.5).squareDistance(data->getVertex(i));
 			if( sqDist<minDist ) {
 				minDist = sqDist;
 				minId = j;
@@ -70,105 +102,87 @@ void UserPointCloud::initBonesWeights() {
 		}
 		
 		verticesBonesId[i] = minId;
-		vertices[i] -= bones[minId].getPosition();
-		//verticesBindMatrices[i].setPosition( -bones[minId].getPosition() );
+		//colors[i] = bones[minId].debugColor;
 	}
 	
-	vbo.setColorData(colors, numUserPixels, GL_STATIC_DRAW);
+	//vbo.setColorData(colors, numUserPixels, GL_STATIC_DRAW);
 }
 
-void UserPointCloud::update() {
+void UserPointCloud::setBoneLength(int boneId, XnSkeletonJoint endBone) {
 	
-	if (user->getTrackedUsers().size()>0) {
-		
-		if(!bBonesInit) {
-			
-			PointCloud::update();
-			initBindPose();
-			updateBones();
-			initBonesWeights();
-			
-			bBonesInit = true;
-		}
-		else {
-			
-			updateBones();
-			Bone * b; ofQuaternion q; float angle; ofVec3f axis;
-			for (int i=0; i<numUserPixels; i++) {
-				b = &bones[ verticesBonesId[i] ];
-				finalVerts[i] = vertices[i];
-				
-				b->getGlobalOrientation().getRotate(angle, axis);
-				finalVerts[i].rotate(angle, axis);
-				finalVerts[i] += b->getPosition();
-			}
-			
-			vbo.setVertexData(finalVerts, numUserPixels, GL_DYNAMIC_DRAW);
-		}
-	}
+	XnSkeletonJointPosition endPos;
+	user->getXnUserGenerator().GetSkeletonCap().GetSkeletonJointPosition(user->getTrackedUser(0)->id, endBone, endPos);
+	
+	ofPoint dest(endPos.position.X, endPos.position.Y, endPos.position.Z);
+	ofPoint origin(bones[boneId].getPosition());
+	
+	bones[boneId].length = origin.distance(dest);
 }
 
 void UserPointCloud::updateBones() {
 	
-	transformNode(WAIST, XN_SKEL_WAIST);
-	transformNode(TORSO, XN_SKEL_TORSO);
-	transformNode(NECK, XN_SKEL_NECK);
-	transformNode(LEFT_SHOULDER, XN_SKEL_LEFT_SHOULDER);
-	transformNode(RIGHT_SHOULDER, XN_SKEL_RIGHT_SHOULDER);
-	transformNode(LEFT_ELBOW, XN_SKEL_LEFT_ELBOW);
-	transformNode(RIGHT_ELBOW, XN_SKEL_RIGHT_ELBOW);
-	transformNode(LEFT_HIP, XN_SKEL_LEFT_HIP);
-	transformNode(RIGHT_HIP, XN_SKEL_RIGHT_HIP);
-	transformNode(LEFT_KNEE, XN_SKEL_LEFT_KNEE);
-	transformNode(RIGHT_KNEE, XN_SKEL_RIGHT_KNEE);
+	for (int i=0; i<kNumTestNodes; i++) {
+		
+		XnUserID userId = user->getTrackedUser(0)->id;
+		
+		// Get the openNI bone info	
+		xn::SkeletonCapability pUserSkel = user->getXnUserGenerator().GetSkeletonCap();		
+		
+		XnSkeletonJointOrientation jointOri;
+		pUserSkel.GetSkeletonJointOrientation(userId, bones[i].xnJointId, jointOri);
+		
+		XnSkeletonJointPosition jointPos;
+		pUserSkel.GetSkeletonJointPosition(userId, bones[i].xnJointId, jointPos);
+		
+		if( jointOri.fConfidence > 0 )
+		 {
+			float * oriM = jointOri.orientation.elements;
+			
+			ofMatrix4x4 rotMatrix;
+			
+			// Create a 4x4 rotation matrix (converting row to column-major)
+			rotMatrix.set(oriM[0], oriM[3], oriM[6], 0.0f,
+						  oriM[1], oriM[4], oriM[7], 0.0f,
+						  oriM[2], oriM[5], oriM[8], 0.0f,
+						  0.0f, 0.0f, 0.0f, 1.0f);
+			
+			ofQuaternion q = rotMatrix.getRotate();
+			
+			bones[i].setPosition(jointPos.position.X, jointPos.position.Y, jointPos.position.Z);
+			
+			// apply skeleton pose relatively to the bone bind pose
+			// /!\ WARNING the order of the quat' multiplication does mater!!
+			bones[i].setOrientation(bones[i].bindPose.getRotate()*q);
+		 }
+	}
 }
 
-
-//--------------------------------------------------------------
-void UserPointCloud::transformNode(int nodeNum, XnSkeletonJoint skelJoint){
+void UserPointCloud::draw(bool bDrawBones) {
 	
-	// Adapted code from OpenNI Simbad example
-	
-	XnUserID userId = user->getTrackedUser(0)->id;
-	
-	// Get the openNI bone info	
-	xn::SkeletonCapability pUserSkel = user->getXnUserGenerator().GetSkeletonCap();		
-	
-	XnSkeletonJointOrientation jointOri;
-	pUserSkel.GetSkeletonJointOrientation(userId, skelJoint, jointOri);
-	
-	XnSkeletonJointPosition jointPos;
-	pUserSkel.GetSkeletonJointPosition(userId, skelJoint, jointPos);
-	
-	if(jointOri.fConfidence > 0 )
-	 {
-		float * oriM = jointOri.orientation.elements;
-		
-		ofMatrix4x4 rotMatrix;
-		
-		// Create a 4x4 rotation matrix (converting row to column-major)
-		rotMatrix.set(oriM[0], oriM[3], oriM[6], 0.0f,
-					  oriM[1], oriM[4], oriM[7], 0.0f,
-					  oriM[2], oriM[5], oriM[8], 0.0f,
-					  0.0f, 0.0f, 0.0f, 1.0f);
-		
-		ofQuaternion q = rotMatrix.getRotate();
-		
-		bones[nodeNum].setPosition(jointPos.position.X, jointPos.position.Y, jointPos.position.Z);
-		
-		// apply skeleton pose relatively to the bone bind pose
-		// /!\ WARNING the order of the quat' multiplication does mater!!
-		bones[nodeNum].setOrientation(bones[nodeNum].bindPose.getRotate()*q);
-	 }
-}
-
-void UserPointCloud::draw() {
-	
-	if(!allocated) return;
-	
-	for(int i=0; i<kNumTestNodes; i++) {
-		bones[i].draw();
+	if(bDrawBones) {
+		for(int i=0; i<kNumTestNodes; i++) {
+			bones[i].draw();
+		}
 	}
 	
-	vbo.draw(GL_POINTS, 0, numUserPixels);
+	shader.begin();
+		
+	// we load the bone transforms in the constant table
+	for (int i=0; i<kNumTestNodes; ++i)
+	{
+	   string boneMatrixUniformName = "boneMatrices["+ofToString(i)+"]";
+	   GLint currentMatrix = glGetUniformLocation(shader.getProgram(), boneMatrixUniformName.c_str());
+	   glUniformMatrix4fv(currentMatrix, 1, GL_FALSE, (bones[i].calibPose * bones[i].getGlobalTransformMatrix()).getPtr());
+	}
+	
+	int bIdAttLoc = shader.getAttributeLocation("boneId");
+	glEnableVertexAttribArray(bIdAttLoc);
+	glVertexAttribPointer(bIdAttLoc, 1, GL_FLOAT, false, 0, verticesBonesId);
+	glBindAttribLocation(shader.getProgram(), bIdAttLoc, "boneId");
+	
+	ofMeshRenderer::draw(&mesh, OF_MESH_POINTS);
+	
+	shader.end();
+	glDisableVertexAttribArray(bIdAttLoc);
+	
 }
