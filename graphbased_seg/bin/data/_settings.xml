@@ -1,0 +1,14 @@
+<controls>
+    <SliderFloat_sigma>
+        <name>sigma</name>
+        <value>0.500000</value>
+    </SliderFloat_sigma>
+    <SliderFloat_k>
+        <name>k</name>
+        <value>500.000000</value>
+    </SliderFloat_k>
+    <SliderInt_minSize>
+        <name>minSize</name>
+        <value>50</value>
+    </SliderInt_minSize>
+</controls>
