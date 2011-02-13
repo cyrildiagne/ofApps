@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C61EC94A12FB736900F16C7A /* Assets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C61EC94812FB736900F16C7A /* Assets.cpp */; };
 		C637988712FA03A700FDC736 /* Trail.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C637988612FA03A700FDC736 /* Trail.cpp */; };
+		C64861671306434B005F3374 /* ofxMouseRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C64861651306434B005F3374 /* ofxMouseRecord.cpp */; };
 		C68BBBD012F91567007982DF /* libcv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C68BBBAB12F91567007982DF /* libcv.a */; };
 		C68BBBD112F91567007982DF /* libcvaux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C68BBBAC12F91567007982DF /* libcvaux.a */; };
 		C68BBBD212F91567007982DF /* libcxcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C68BBBAD12F91567007982DF /* libcxcore.a */; };
@@ -33,7 +34,6 @@
 		C6B7A1BF1304A8F000E8B2A9 /* assert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6B7A1BB1304A8F000E8B2A9 /* assert.cpp */; };
 		C6B7A1C01304A8F000E8B2A9 /* del_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6B7A1BC1304A8F000E8B2A9 /* del_impl.cpp */; };
 		C6B7A1C11304A8F000E8B2A9 /* ofxTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6B7A1BD1304A8F000E8B2A9 /* ofxTriangle.cpp */; };
-		C6B7A22C1304ABAB00E8B2A9 /* ofxMouseRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6B7A22B1304ABAB00E8B2A9 /* ofxMouseRecord.cpp */; };
 		C6B7A2371304AC1000E8B2A9 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6B7A2301304AC1000E8B2A9 /* tinyxml.cpp */; };
 		C6B7A2381304AC1000E8B2A9 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6B7A2321304AC1000E8B2A9 /* tinyxmlerror.cpp */; };
 		C6B7A2391304AC1000E8B2A9 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6B7A2331304AC1000E8B2A9 /* tinyxmlparser.cpp */; };
@@ -74,6 +74,8 @@
 		C61EC94912FB736900F16C7A /* Assets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Assets.h; sourceTree = "<group>"; };
 		C637988512FA03A700FDC736 /* Trail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Trail.h; sourceTree = "<group>"; };
 		C637988612FA03A700FDC736 /* Trail.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Trail.cpp; sourceTree = "<group>"; };
+		C64861651306434B005F3374 /* ofxMouseRecord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMouseRecord.cpp; sourceTree = "<group>"; };
+		C64861661306434B005F3374 /* ofxMouseRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMouseRecord.h; sourceTree = "<group>"; };
 		C68BBB9512F91567007982DF /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		C68BBB9912F91567007982DF /* cv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cv.h; sourceTree = "<group>"; };
 		C68BBB9A12F91567007982DF /* cv.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cv.hpp; sourceTree = "<group>"; };
@@ -135,8 +137,6 @@
 		C6B7A1BC1304A8F000E8B2A9 /* del_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = del_impl.cpp; sourceTree = "<group>"; };
 		C6B7A1BD1304A8F000E8B2A9 /* ofxTriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTriangle.cpp; sourceTree = "<group>"; };
 		C6B7A1BE1304A8F000E8B2A9 /* ofxTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTriangle.h; sourceTree = "<group>"; };
-		C6B7A22A1304ABAB00E8B2A9 /* ofxMouseRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMouseRecord.h; sourceTree = "<group>"; };
-		C6B7A22B1304ABAB00E8B2A9 /* ofxMouseRecord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMouseRecord.cpp; sourceTree = "<group>"; };
 		C6B7A22E1304AC1000E8B2A9 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		C6B7A2301304AC1000E8B2A9 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
 		C6B7A2311304AC1000E8B2A9 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
@@ -205,13 +205,23 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				C64861641306434B005F3374 /* ofxMouseRecord */,
 				C6B7A22D1304AC1000E8B2A9 /* ofxXmlSettings */,
-				C6B7A2291304AB9D00E8B2A9 /* ofxMouseRecord */,
 				C6B7A1B21304A8F000E8B2A9 /* ofxTriangle */,
 				C68BBB8D12F91567007982DF /* ofxOpenCv */,
 			);
 			name = addons;
 			sourceTree = "<group>";
+		};
+		C64861641306434B005F3374 /* ofxMouseRecord */ = {
+			isa = PBXGroup;
+			children = (
+				C64861651306434B005F3374 /* ofxMouseRecord.cpp */,
+				C64861661306434B005F3374 /* ofxMouseRecord.h */,
+			);
+			name = ofxMouseRecord;
+			path = ../../../addons/kikkolibs/ofxMouseRecord;
+			sourceTree = SOURCE_ROOT;
 		};
 		C68BBB8D12F91567007982DF /* ofxOpenCv */ = {
 			isa = PBXGroup;
@@ -373,15 +383,6 @@
 				C6B7A1BC1304A8F000E8B2A9 /* del_impl.cpp */,
 			);
 			path = Triangle;
-			sourceTree = "<group>";
-		};
-		C6B7A2291304AB9D00E8B2A9 /* ofxMouseRecord */ = {
-			isa = PBXGroup;
-			children = (
-				C6B7A22A1304ABAB00E8B2A9 /* ofxMouseRecord.h */,
-				C6B7A22B1304ABAB00E8B2A9 /* ofxMouseRecord.cpp */,
-			);
-			name = ofxMouseRecord;
 			sourceTree = "<group>";
 		};
 		C6B7A22D1304AC1000E8B2A9 /* ofxXmlSettings */ = {
@@ -551,11 +552,11 @@
 				C6B7A1BF1304A8F000E8B2A9 /* assert.cpp in Sources */,
 				C6B7A1C01304A8F000E8B2A9 /* del_impl.cpp in Sources */,
 				C6B7A1C11304A8F000E8B2A9 /* ofxTriangle.cpp in Sources */,
-				C6B7A22C1304ABAB00E8B2A9 /* ofxMouseRecord.cpp in Sources */,
 				C6B7A2371304AC1000E8B2A9 /* tinyxml.cpp in Sources */,
 				C6B7A2381304AC1000E8B2A9 /* tinyxmlerror.cpp in Sources */,
 				C6B7A2391304AC1000E8B2A9 /* tinyxmlparser.cpp in Sources */,
 				C6B7A23A1304AC1000E8B2A9 /* ofxXmlSettings.cpp in Sources */,
+				C64861671306434B005F3374 /* ofxMouseRecord.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,9 +20,7 @@ void testApp::setup(){
 	
 	setScreenBounds();
 	
-    loadContours();
-	
-	initLines();
+    loadContours();	
 }
 
 void testApp::setScreenBounds(){
@@ -53,19 +51,6 @@ void testApp::loadContours(){
 	//letters[LETTER_E_OUTLINE].addHole(&letters[LETTER_E_INLINE]);
 }
 
-void testApp::initLines(){
-	
-	int numColumns = logo.width / LINE_SPACE;
-	int numRows = logo.height / LINE_SPACE;
-	
-	float margin = 10.f;
-	
-	for(int i=0; i<numColumns; i++){
-		//trails.push_back( Trail( ofPoint((i+0.5)*LINE_SPACE, logo.height-margin), ofPoint(-1, -1).getNormalized() ) );
-	}
-}
-
-
 //--------------------------------------------------------------
 void testApp::update(){
 	
@@ -73,6 +58,8 @@ void testApp::update(){
 	Trail *trail;
 	
 	bool bInsideLetter;
+	
+	vector<ofPoint> growings;
 	
 	for(int i=0; i<trails.size(); i++){
 		
@@ -98,10 +85,18 @@ void testApp::update(){
 			}
 		}
 		else {
+			
 			trail->update(letters[trail->letterId]);
+			
+			//if (trails[i].bPlantMode) {
+				growings.push_back(trails[i].position);
+			//}
 		}
-		
 	}
+	
+	triangle.clear();
+	if(growings.size()>=3)
+		triangle.triangulate( growings );
 }
 
 //--------------------------------------------------------------
@@ -124,11 +119,21 @@ void testApp::draw(){
 		}
 	}
 	
-	Trail * prevSeedTrail = NULL;
-	Trail * trail = NULL;
-		
+	
 	for(i=0; i<trails.size(); i++) {
+		
 		trails[i].draw();
+	}
+	
+	vector<ofxTriangleData> triangles = triangle.getTriangles();
+	for (int i=0; i<triangles.size(); i++) {
+		
+		ofSetColor(255, 255, 255, 80);
+		ofNoFill();
+		ofTriangle(triangles[i].a, triangles[i].b, triangles[i].c);
+		//ofSetColor(255, 255, 255, 80);
+		//ofFill();
+		//ofTriangle(triangles[i].a, triangles[i].b, triangles[i].c);
 	}
 	
 	fbo.end();
@@ -146,6 +151,7 @@ void testApp::draw(){
 	mouseRecord.draw();
 }
 
+
 void testApp::mouseDragged(int x, int y, int button){
 	
 	trails.push_back( Trail( ofPoint(x, y), ofPoint(-1, -1).getNormalized() ) );
@@ -161,8 +167,8 @@ void testApp::keyPressed(int key){
 		case 'd':
 			bDebug = !bDebug;
 			break;
-		case 'm': mouseRecord.record("mouse_record.xml");
-		case 'p': mouseRecord.play("mouse_record.xml");
+		case 'm': mouseRecord.toggleRecording(); break;
+		case 'p': mouseRecord.togglePlaying(); break;
 			
 		default:
 			break;

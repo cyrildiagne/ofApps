@@ -5,7 +5,7 @@
 // addons
 #include "ofxOpenCv.h"
 #include "ofxMouseRecord.h"
-//#include "ofxTriangle.h"
+#include "ofxTriangle.h"
 
 // internal
 #include "Assets.h"
@@ -36,7 +36,6 @@ public:
     void gotMessage(ofMessage msg);
 	
 	void loadContours();
-	void initLines();
 
 private:
 	
@@ -47,7 +46,7 @@ private:
 	ofFbo fbo;
 	ofxMouseRecord mouseRecord;
 	
-	//ofxTriangle triangle;
+	ofxTriangle triangle;
 	
 	Border screenBounds;
 	void setScreenBounds();

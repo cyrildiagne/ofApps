@@ -39,11 +39,10 @@ public:
 	ofColor color;
 	
 	int letterId;
-	
-private:
-	
 	bool bPlantMode;
 	bool bActive;
+	
+private:
 	
 	ofImage *particle;
 	
