@@ -19,7 +19,7 @@ Trail::Trail(ofPoint initPos, ofPoint initVelocity){
 	
 	r = 2.0;
 	wandertheta = -initVelocity.angleRad(ofVec3f(0, 0));
-	maxforce = 0.2;
+	maxforce = 0.15;
 	maxspeed = 8.0;
 	
 	letterId = -1;
@@ -27,8 +27,8 @@ Trail::Trail(ofPoint initPos, ofPoint initVelocity){
 	bPlantMode = false;
 	bActive = true;
 	
-	particle = Assets::Instance()->getImage(LEAF);
-	particle->setAnchorPoint(7, 21);
+	//particle = Assets::Instance()->getImage(LEAF);
+	//particle->setAnchorPoint(7, 21);
 }
 
 // ported from http://www.shiffman.net/itp/classes/nature/week06_s09/wander/Boid.pde
@@ -101,8 +101,8 @@ void Trail::update(){
 	
 	if(bPlantMode) {
 		
-		maxspeed *= 0.97;
-		maxforce *= 0.997;
+		maxspeed *= 0.975;
+		maxforce *= 0.996;
 		
 		if((int)ofRandom(2)==1) {
 			pts.push_back(position);
@@ -143,26 +143,26 @@ void Trail::draw(){
 	
 	float angle = velocity.angleRad(ofPoint(1, 0, 0));
 	
+	if(bActive){
+
+		ofPushMatrix();
+		ofTranslate(position.x, position.y, 0);
+		ofSetColor(210, 210, 255, 255);
+		ofCircle(0, 0, 3);
+		ofSetColor(210, 210, 255, 15);
+		ofCircle(0, 0, 10);
+		ofPopMatrix();
+	}
+	/*
 	if(bPlantMode){
 		if(bActive){
 			
 			ofPushMatrix();
 			ofTranslate(position.x, position.y, 0);
-			//ofSetColor(255, 255, 255, 50);
-			//ofCircle(0, 0, 15);
-			ofSetColor(255, 255, 255);
+			ofSetColor(210, 210, 255, 255);
 			ofCircle(0, 0, 3);
-			//ofRotate( 90-ofRadToDeg( angle ) );
-			//particle->draw(0, 0);
-			/*ofFill();
-			 ofSetColor(120, 190, 40, 140);
-			 ofCircle(0, 0, 6);
-			 ofSetColor(120, 190, 40, 50);
-			 ofCircle(0, 0, 12);
-			 ofSetColor(255, 255, 255, 255);
-			 ofCircle(0, 0, 3);
-			 */
-			
+			ofSetColor(210, 210, 255, 15);
+			ofCircle(0, 0, 10);
 			ofPopMatrix();
 		}
 		
@@ -173,8 +173,9 @@ void Trail::draw(){
 		
 		ofFill();
 		//ofSetColor(color.r, color.g, color.b, 255);
-		ofSetColor(100, 160, 60, 255);
+		ofSetColor(210, 210, 255, 255);
 		ofCircle(position.x, position.y, 2);
 	}
+	 */
 	
 }

@@ -5,57 +5,35 @@ void testApp::setup(){
 	
 	ofBackground( ofColor(255, 255, 255) );
 	ofSetFrameRate(60);
-	
-	logo.loadImage("logo.png");
-	logo.setImageType(OF_IMAGE_GRAYSCALE);
-	
+
 	logoWhite.loadImage("logo_white.png");
 	
 	bg.loadImage("bg.png");
-
-	fbo.setup(ofGetWidth(), ofGetHeight(), GL_RGBA, 1);
+	
+	hollerLogoApp::setup();
+	
 	fbo.begin();
 	ofSetColor(255, 255, 255);
 	ofRect(0, 0, ofGetWidth(), ofGetHeight());
 	fbo.end();
-
-	bDebug = false;
 	
-	setScreenBounds();
-	
-    loadContours();	
-}
-
-void testApp::setScreenBounds(){
-	
-	vector<ofPoint> pts;
-	pts.push_back(ofPoint(0, 0));
-	pts.push_back(ofPoint(ofGetWidth(), 0));
-	pts.push_back(ofPoint(ofGetWidth(), ofGetHeight()));
-	pts.push_back(ofPoint(0, ofGetHeight()));
-	
-	screenBounds.set(pts);
-}
-
-void testApp::loadContours(){
-	
-	ofxCvGrayscaleImage logoCv;
-	logoCv.allocate(logo.width, logo.height);
-	logoCv.setFromPixels(logo.getPixels(), logo.width, logo.height);
-	
-	ofxCvContourFinder contourFinder;
-	contourFinder.findContours(logoCv, 20*20, 300*300, 10, true, true);
-		
-	for(int i=0; i<contourFinder.blobs.size(); i++){
-		letters.push_back( Border(contourFinder.blobs[i].pts, 10.f) );
+	for (int i=0; i<letters.size(); i++) {
+		numTrailsInside.push_back(0);
 	}
-	
-	letters[LETTER_O_OUTLINE].addHole(&letters[LETTER_O_INLINE]);
-	letters[LETTER_E_OUTLINE].addHole(&letters[LETTER_E_INLINE]);
 }
 
 //--------------------------------------------------------------
-void testApp::update(){
+void testApp::resetApp(){
+	trails.clear();
+	
+	fbo.begin();
+	ofSetColor(255, 255, 255);
+	ofRect(0, 0, ofGetWidth(), ofGetHeight());
+	fbo.end();
+}
+
+//--------------------------------------------------------------
+void testApp::updateApp(){
 	
 	for(int i=0; i<trails.size(); i++){
 		trails[i].update();
@@ -63,33 +41,46 @@ void testApp::update(){
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){
-	
-	fbo.begin();
-	
-	ofEnableAlphaBlending();
-	
-	ofSetColor(255, 255, 255, 5);
-	bg.draw(0, 0);
+void testApp::drawApp(){
 	
 	ofPoint pt;
 	ofPoint middle;
 	ofPoint pt2;
 	int i, j;
-	/*
-	ofSetColor(255, 255, 255, 255);
-	ofNoFill();
 	
-	for(i=0; i<letters.size(); i++){
+	fbo.end();
+	ofSetColor(255, 255, 255, 255);
+	bg.draw(0, 0);
+	
+	// TODO : replace drawing method with png
+	ofFill();
+	for(i=0; i<numTrailsInside.size(); i++){
+		ofSetColor(255, 255, 255, numTrailsInside[i]*12);
 		ofBeginShape();
 		ofVertexes(letters[i].points);
 		ofEndShape(false);
-	}
-	 */
+		
+		numTrailsInside[i] = 0;
+	}	
 	
-	for (i=0; i<letters.size(); i++) {
-		letters[i].numTrailsInside = 0;
+	fbo.begin();
+	
+	ofEnableAlphaBlending();
+	
+	ofSetColor(255, 255, 255, 8);
+	bg.draw(0, 0);
+	
+	// TODO : replace drawing method with png
+	ofFill();
+	for(i=0; i<numTrailsInside.size(); i++){
+		ofSetColor(255, 255, 255, numTrailsInside[i]*12);
+		ofBeginShape();
+		ofVertexes(letters[i].points);
+		ofEndShape(false);
+		
+		numTrailsInside[i] = 0;
 	}
+	
 	
 	ofColor c1, c2, c3;
 	
@@ -103,7 +94,7 @@ void testApp::draw(){
 			c1 = ofColor(255, 0, 175)  / 255;	c1.a = 1;
 			c2 = ofColor(25, 102, 255) / 255;	c2.a = 0.6;
 			c3 = ofColor(255, 0, 153)  / 255;	c3.a = 0;
-			trails[i].bounds->numTrailsInside++;
+			numTrailsInside[trails[i].letterId] += 1;
 		} else {
 			c1 = ofColor(255, 255, 255) / 255;	c1.a = 0.4;
 			c2 = ofColor(75, 150, 255)  / 255;	c2.a = 1;
@@ -170,30 +161,6 @@ void testApp::draw(){
 		
 		trails[i].draw();
 	}
-
-	fbo.end();
-	
-	ofSetColor(255, 255, 255, 255);
-	bg.draw(0, 0);
-	
-	
-	
-	ofFill();
-	
-	// TODO : replace drawing method with png
-	for(i=0; i<letters.size(); i++){
-		ofSetColor(255, 255, 255, letters[i].numTrailsInside*12);
-		ofBeginShape();
-		ofVertexes(letters[i].points);
-		ofEndShape(false);
-	}
-	
-	
-	ofSetColor(255, 255, 255, 255);
-	fbo.draw(0, ofGetHeight(), fbo.getWidth(), -fbo.getHeight());
-	
-	ofSetColor(255, 255, 255, 255);
-	ofDrawBitmapString(ofToString(ofGetFrameRate(), 1), ofGetWidth()-40, ofGetHeight()-10);
 }
 
 void testApp::mouseDragged(int x, int y, int button){
@@ -204,21 +171,9 @@ void testApp::mouseDragged(int x, int y, int button){
 		num = (int)ofRandom(letters.size());
 	} while (num==LETTER_E_INLINE || num==LETTER_O_INLINE);
 		
-	trails.push_back( Trail( ofPoint(x, y), ofPoint(-1, -1).getNormalized(), &letters[num] ) );
+	trails.push_back( Trail( ofPoint(x, y), ofPoint(-1, -1).getNormalized(), &letters[num], num ) );
 	
 	if(trails.size()>130){
 		trails.erase(trails.begin());
-	}
-}
-
-//--------------------------------------------------------------
-void testApp::keyPressed(int key){
-	
-	switch (key) {
-		case 'd':
-			bDebug = !bDebug;
-			break;
-		default:
-			break;
 	}
 }

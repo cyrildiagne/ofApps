@@ -18,7 +18,7 @@ class Trail {
 
 public:
 	
-	Trail(ofPoint initPos, ofPoint initVelocity, Border* bounds);
+	Trail(ofPoint initPos, ofPoint initVelocity, Border* bounds, int letterId);
 	
 	void update();
 		
@@ -31,7 +31,9 @@ public:
 	ofPoint acc;
 	
 	ofColor color;
-		
+	
+	int letterId;
+	
 private:
 	
 	ofPoint getNewTarget();

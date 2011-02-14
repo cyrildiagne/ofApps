@@ -22,7 +22,7 @@ Trail::Trail(ofPoint initPos, ofPoint initVelocity){
 	
 	letterId = -1;
 	
-	color.set(180+ofRandom(70), 75, 50 );
+	color.set(180+ofRandom(70), 0, 0 );
 	
 	particle = Assets::Instance()->getImage(PARTICLE);
 }

@@ -9,13 +9,16 @@
 
 #include "Trail.h"
 
-Trail::Trail(ofPoint initPos, ofPoint initVelocity, Border* bounds){
+Trail::Trail(ofPoint initPos, ofPoint initVelocity, Border* bounds, int letterId){
 	
 	position = initPos;
 	velocity = ofPoint();
 	this->bounds = bounds;
+	this->letterId = letterId;
 	
 	color.set(114, 150+ofRandom(80)-40, 52);
+	
+	letterId = -1;
 	
 	target = getNewTarget();
 }

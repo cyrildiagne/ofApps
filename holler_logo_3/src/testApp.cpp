@@ -6,8 +6,6 @@ void testApp::setup(){
 	ofBackground( ofColor(0, 0, 0) );
 	ofSetFrameRate(60);
 	
-	logo.loadImage("logo.png");
-	logo.setImageType(OF_IMAGE_GRAYSCALE);
 	logoWhite.loadImage("logo_white.png");
 	bg.loadImage("bg.png");
 	
@@ -16,18 +14,42 @@ void testApp::setup(){
 	box2d.setFPS(30.0);
 	box2d.registerGrabbing();
 	
-	bDebug = false;
+	hollerLogoApp::setup();
 	
-	setScreenBounds();
+	addLettersToBox2D();
+}
+
+
+void testApp::resetApp(){
 	
-    loadContours();
+	lettersImg.clear();
+	
+	int i;
+	
+	for (i=0; i<joints.size(); i++) {
+		joints[i].destroy();
+	}
+	joints.clear();
+	
+	for (i=0; i<circles.size(); i++) {
+		circles[i].destroy();
+	}
+	circles.clear();
+	
+	for (i=0; i<lettersPoly.size(); i++) {
+		lettersPoly[i].destroy();
+	}
+	lettersPoly.clear();
+	
+	anchor.destroy();
+	
 	
 	addLettersToBox2D();
 }
 
 void testApp :: addLettersToBox2D(){
 	
-	anchor.setPhysics(0.0, 0.4, 0.3);;
+	anchor.setPhysics(0.0, 0.4, 0.3);
 	anchor.setup(box2d.getWorld(), ofGetWidth()*0.5, 100, 400, 12);
 	
 	for (int i=0; i<letters.size(); i++) {
@@ -120,50 +142,20 @@ void testApp::setupJoint(ofxBox2dJoint &joint, ofxBox2dBaseShape &s1, ofxBox2dBa
 	joint.setup(box2d.getWorld(), s1.body, s2.body, getB2Vec(p1x, p1y), getB2Vec(p2x, p2y), .3, 1.0);
 }
 
-void testApp::setScreenBounds(){
-	
-	vector<ofPoint> pts;
-	pts.push_back(ofPoint(0, 0));
-	pts.push_back(ofPoint(ofGetWidth(), 0));
-	pts.push_back(ofPoint(ofGetWidth(), ofGetHeight()));
-	pts.push_back(ofPoint(0, ofGetHeight()));
-	
-	screenBounds.set(pts);
-}
-
-void testApp::loadContours(){
-	
-	ofxCvGrayscaleImage logoCv;
-	logoCv.allocate(logo.width, logo.height);
-	logoCv.setFromPixels(logo.getPixels(), logo.width, logo.height);
-	
-	ofxCvContourFinder contourFinder;
-	contourFinder.findContours(logoCv, 20*20, 300*300, 10, true, true);
-		
-	for(int i=0; i<contourFinder.blobs.size(); i++){
-		letters.push_back( Border(contourFinder.blobs[i].pts, 25.f) );
-	}
-		
-	//letters[LETTER_O_OUTLINE].addHole(&letters[LETTER_O_INLINE]);
-	//letters[LETTER_E_OUTLINE].addHole(&letters[LETTER_E_INLINE]);
-}
-
 //--------------------------------------------------------------
-void testApp::update(){
+void testApp::updateApp(){
 	
 	box2d.update();
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){
+void testApp::drawApp(){
 	
 	ofSetColor(255, 255, 255);
 	bg.draw(0, 0);
 		
 	ofSetColor(255, 255, 255);
 	//logoWhite.draw(0, 0);
-	
-	
 	
 	int i;
 	
@@ -218,39 +210,22 @@ void testApp::draw(){
 		
 		ofDisableAlphaBlending();
 	}
-	
-	
-	
-	ofSetColor(0xff, 0xff, 0xff);
-	ofDrawBitmapString(ofToString(ofGetFrameRate(), 1), ofGetWidth()-40, ofGetHeight()-10);
 }
 
-void testApp::mousePressed(int x, int y, int button){
-
+void testApp::keyPressed(int key){
+	if(key == 'i'){
+	//	mouseRecord.record("mouse_record.xml");
+	}
 }
 
 void testApp::mouseDragged(int x, int y, int button){
 	
-	
-}
-
-//--------------------------------------------------------------
-void testApp::keyPressed(int key){
-	
-	if(key == 'c') {
+	if(!box2d.mouseJoint) {
 		ofxBox2dCircle circle;
 		circle.setPhysics(1, 0.4, 0.3);
 		circle.setup(box2d.getWorld(), ofGetMouseX(), ofGetMouseY(), ofRandom(10, 25));
 		circle.addForce(ofVec2f(0, -5), 120);//setDamping(0, -10);
 		//circle.addImpulseForce(ofVec2f(0, -70.0), ofVec2f(circle.bodyDef.position.x, circle.bodyDef.position.x));//.addForce(ofVec2f(-1, 0), 5);
 		circles.push_back(circle);
-	}
-	
-	switch (key) {
-		case 'd':
-			bDebug = !bDebug;
-			break;
-		default:
-			break;
 	}
 }
