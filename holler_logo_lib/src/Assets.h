@@ -13,6 +13,9 @@
 
 #define PARTICLE "part.png"
 
+#define HRED_R 227
+#define HRED_G 65
+#define HRED_B 75
 
 class CachedImage : public ofImage {
 	

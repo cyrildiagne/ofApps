@@ -16,7 +16,7 @@ void Border::set(vector<ofPoint> &pts, float spacing){
 		ofPolyline temp;
 		temp.addVertexes(pts);
 		temp = ofGetResampledSpacing(temp, spacing);
-		addVertexes(temp.points);
+		addVertexes(temp.getVertices());
 	}
 	else {
 		addVertexes(pts);
@@ -28,19 +28,22 @@ void Border::set(vector<ofPoint> &pts, float spacing){
 }
 
 void Border::computeNormals(){
-
+	
+	vector <ofPoint> pts = getVertices();
+	
 	int i;
-	for (i=0; i<points.size()-1; i++) {
-		edges.push_back( ofVec2f(points[i+1]-points[i]));
-		normals.push_back( ofVec2f(points[i+1]-points[i]).getPerpendicular() );
+	for (i=0; i<pts.size()-1; i++) {
+		edges.push_back( ofVec2f(pts[i+1]-pts[i]));
+		normals.push_back( ofVec2f(pts[i+1]-pts[i]).getPerpendicular() );
 	}
-	edges.push_back( ofVec2f(points[0]-points[i]));
-	normals.push_back( ofVec2f(points[0]-points[i]).getPerpendicular() );
+	edges.push_back( ofVec2f(pts[0]-pts[i]));
+	normals.push_back( ofVec2f(pts[0]-pts[i]).getPerpendicular() );
 }
 
 void Border::addHole(Border * hole){
 	
-	points.insert( points.end(), hole->points.begin(), hole->points.end() );
+	vector <ofPoint> pts = getVertices();
+	pts.insert( pts.end(), hole->getVertices().begin(), hole->getVertices().end() );
 	edges.insert( edges.end(), hole->edges.begin(), hole->edges.end() );
 	normals.insert( normals.end(), hole->normals.begin(), hole->normals.end() );
 }
@@ -64,12 +67,14 @@ int Border::checkCollision(ofPoint position, ofPoint velocity, ofVec2f* newPosit
 	bool bCollide = false;
 	ofPoint isectPoint;
 	
-	for (int i=0; i<points.size(); i++) {
+	vector<ofPoint> pts = getVertices();
+	
+	for (int i=0; i<pts.size(); i++) {
 		
 		// verify if we're moving toward this wall's normal
 		if(normals[i].dot(velocity) >= 0) continue;
 		
-		float result = checkIntersection(position, velocity, ofVec2f(points[i]), edges[i]);
+		float result = checkIntersection(position, velocity, ofVec2f(pts[i]), edges[i]);
 		
 		if(result!=-1) {
 			
@@ -133,15 +138,17 @@ void Border::drawNormals(){
 	
 	ofPoint scaledNormal;
 	
+	vector<ofPoint> pts = getVertices();
+	
 	for ( int i=0; i<(int)normals.size(); i++ ) {
 		 
 		scaledNormal = normals[i].getScaled(10.f);		 
-		ofLine( points[i],
-		ofPoint(points[i].x+scaledNormal.x, points[i].y+scaledNormal.y) );
+		ofLine( pts[i],
+		ofPoint(pts[i].x+scaledNormal.x, pts[i].y+scaledNormal.y) );
 	}
 }
 
 void Border::draw(){
 	
-	ofPolyline::draw();
+	//ofPolyline::draw();
 }

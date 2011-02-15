@@ -46,17 +46,17 @@ void Trail::draw(){
 	
 	ofFill();
 	
-	ofSetColor(255, 255, 255, 255);
+	ofSetColor(255, 255, 255, 100);
 	ofCircle(position.x, position.y, 2);
 	
-	ofSetColor(255, 255, 255, 50);
+	ofSetColor(255, 255, 255, 10);
 	ofCircle(position.x, position.y, 8);
 }
 
 ofPoint Trail::getNewTarget(){
 	
-	int num = (int)ofRandom(bounds->points.size());
-	ofPoint pos = bounds->points[ num ];
+	int num = (int)ofRandom(bounds->getVertices().size());
+	ofPoint pos = bounds->getVertices()[ num ];
 	
 	//return pos;
 	int amp = 50;

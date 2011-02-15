@@ -2,13 +2,10 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-	
-	ofBackground( ofColor(255, 255, 255) );
-	ofSetFrameRate(60);
 
 	logoWhite.loadImage("logo_white.png");
 	
-	bg.loadImage("bg.png");
+	bg.loadImage("bg_dark.png");
 	
 	hollerLogoApp::setup();
 	
@@ -52,12 +49,14 @@ void testApp::drawApp(){
 	ofSetColor(255, 255, 255, 255);
 	bg.draw(0, 0);
 	
+	vector<ofPoint> pts;
+	
 	// TODO : replace drawing method with png
 	ofFill();
 	for(i=0; i<numTrailsInside.size(); i++){
-		ofSetColor(255, 255, 255, numTrailsInside[i]*12);
+		ofSetColor(0,0, 0, numTrailsInside[i]*3);
 		ofBeginShape();
-		ofVertexes(letters[i].points);
+		ofVertexes(letters[i].getVertices());
 		ofEndShape(false);
 		
 		numTrailsInside[i] = 0;
@@ -67,15 +66,15 @@ void testApp::drawApp(){
 	
 	ofEnableAlphaBlending();
 	
-	ofSetColor(255, 255, 255, 8);
+	ofSetColor(255, 255, 255, 4);
 	bg.draw(0, 0);
 	
 	// TODO : replace drawing method with png
 	ofFill();
 	for(i=0; i<numTrailsInside.size(); i++){
-		ofSetColor(255, 255, 255, numTrailsInside[i]*12);
+		ofSetColor(0, 0, 0, numTrailsInside[i]*12);
 		ofBeginShape();
-		ofVertexes(letters[i].points);
+		ofVertexes(letters[i].getVertices());
 		ofEndShape(false);
 		
 		numTrailsInside[i] = 0;
@@ -90,30 +89,29 @@ void testApp::drawApp(){
 		
 		pt = trails[i].position;
 		
-		if(ofInsidePoly(pt, trails[i].bounds->points)){
-			c1 = ofColor(255, 0, 175)  / 255;	c1.a = 1;
-			c2 = ofColor(25, 102, 255) / 255;	c2.a = 0.6;
-			c3 = ofColor(255, 0, 153)  / 255;	c3.a = 0;
-			numTrailsInside[trails[i].letterId] += 1;
-		} else {
-			c1 = ofColor(255, 255, 255) / 255;	c1.a = 0.4;
-			c2 = ofColor(75, 150, 255)  / 255;	c2.a = 1;
-			c3 = ofColor(255, 255, 255) / 255;	c3.a = 1;
-		}
-		
-		ofSetColor(255, 255, 255, 140);
-		
-		for (j=0; j<trails.size(); j++){
-			if(pt.squareDistance(trails[j].position) < 2000){
-				ofLine(pt, trails[j].position);
-			}
-		}
-		
-		ofSetColor(255, 255, 255, 255);
-				
-		for (j=0; j<trails[i].bounds->points.size(); j++){
+		if(ofInsidePoly(pt, trails[i].bounds->getVertices())){
 			
-			pt2 = trails[i].bounds->points[j];
+			c1 = ofColor(0, 0, 0) / 255;	c1.a = 0.7;
+			c2 = ofColor(HRED_R, HRED_G, HRED_B)  / 255;	c2.a = 1;
+			c3 = ofColor(0, 0, 0) / 255;	c3.a = 1;
+			numTrailsInside[trails[i].letterId] += 1;
+			
+		} else {
+			
+			c1 = ofColor(HRED_R, HRED_G, HRED_B)  / 255;	c1.a = 1;
+			c2 = ofColor(0, 0, 0) / 255;	c2.a = 0.6;
+			c3 = ofColor(HRED_R, HRED_G, HRED_B-20)  / 255;	c3.a = 0;
+		}
+		
+		
+				
+		ofSetColor(125, 0, 0, 255);
+		
+		pts = trails[i].bounds->getVertices();
+		
+		for (j=0; j<pts.size(); j++){
+			
+			pt2 = pts[j];
 			middle = pt.getMiddle(pt2);
 			
 			if(pt.squareDistance(pt2) < 3000){
@@ -159,7 +157,19 @@ void testApp::drawApp(){
 			}
 		}
 		
+		ofEnableBlendMode(OF_BLENDMODE_ADD);
+		
+		ofSetColor(255, 200, 200, 20);
+		
+		for (j=0; j<trails.size(); j++){
+			if(pt.squareDistance(trails[j].position) < 2000){
+				ofLine(pt, trails[j].position);
+			}
+		}
+		
 		trails[i].draw();
+		
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	}
 }
 
@@ -173,7 +183,7 @@ void testApp::mouseDragged(int x, int y, int button){
 		
 	trails.push_back( Trail( ofPoint(x, y), ofPoint(-1, -1).getNormalized(), &letters[num], num ) );
 	
-	if(trails.size()>130){
+	if(trails.size()>180){
 		trails.erase(trails.begin());
 	}
 }

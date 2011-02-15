@@ -42,6 +42,8 @@ public:
 	bool bPlantMode;
 	bool bActive;
 	
+	float colorCycle;
+	
 private:
 	
 	ofImage *particle;

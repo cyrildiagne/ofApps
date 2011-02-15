@@ -35,7 +35,7 @@ void testApp::updateApp(){
 			
 			trail->update(screenBounds);
 			
-			if(!ofInsidePoly( trail->position, screenBounds.points )){
+			if(!ofInsidePoly( trail->position, screenBounds.getVertices() )){
 				trails.erase(trails.begin()+i);
 				i--;
 				continue;
@@ -43,7 +43,7 @@ void testApp::updateApp(){
 			
 			// look if it has found a letter now
 			for(int j=0; j<letters.size(); j++){
-				if( ofInsidePoly( *pos, letters[j].points ) ) {
+				if( ofInsidePoly( *pos, letters[j].getVertices() ) ) {
 					trail->letterId = j;
 				}
 			}
@@ -91,6 +91,7 @@ void testApp::drawApp(){
 	ofSetLineWidth(0.5);
 	vector<ofxTriangleData> triangles = triangle.getTriangles();
 	ofSetColor(210, 210, 255, 190);
+	//ofSetColor(HRED_R, HRED_G, HRED_G);
 	ofNoFill();
 	for (int i=0; i<triangles.size(); i++) {
 		

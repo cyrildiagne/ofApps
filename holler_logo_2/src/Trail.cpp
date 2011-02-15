@@ -14,7 +14,8 @@ Trail::Trail(ofPoint initPos, ofPoint initVelocity){
 	position = initPos;
 	velocity = ofPoint();//initVelocity.getScaled(4);
 	
-	color.set(114, 150+ofRandom(80)-40, 52);
+	//color.set(114, 150+ofRandom(80)-40, 52);
+	ofSetColor(HRED_R, HRED_G, HRED_B);
 	//color.set(ofRandom(0, 255), ofRandom(0, 255), ofRandom(0, 255));
 	
 	r = 2.0;
@@ -26,6 +27,8 @@ Trail::Trail(ofPoint initPos, ofPoint initVelocity){
 	
 	bPlantMode = false;
 	bActive = true;
+	
+	colorCycle=0;
 	
 	//particle = Assets::Instance()->getImage(LEAF);
 	//particle->setAnchorPoint(7, 21);
@@ -135,10 +138,12 @@ void Trail::draw(){
 		percent = (float)i/pts.size();
 		float offset = 255 * percent;
 		
-		ofSetColor(color.r+offset*0.5, color.g + offset*0.8, color.b+offset*0.3, 255);
-		ofSetLineWidth( (1-percent) * 5 );
+		ofSetColor(120+cos(colorCycle+percent)*60+30+offset*0.8, 30 + offset*0.3, 30+offset*0.3, 255);
+		ofSetLineWidth( (1-percent) * 10 );
 		ofLine(pts[i-1].x, pts[i-1].y, pts[i].x, pts[i].y);
 	}
+	
+	colorCycle+= 0.1;
 	
 	
 	float angle = velocity.angleRad(ofPoint(1, 0, 0));
