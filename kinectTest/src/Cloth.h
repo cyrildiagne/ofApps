@@ -10,8 +10,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxVectorMath.h"
-#include "ofShader.h"
 #include "3DUtils.h"
 #include "ofxKinect.h"
 

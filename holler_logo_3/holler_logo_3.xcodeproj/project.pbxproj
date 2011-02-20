@@ -323,7 +323,7 @@
 		C6BDEC6E12FD225600934B84 /* ofxBox2dRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBox2dRender.h; sourceTree = "<group>"; };
 		C6BDEC6F12FD225600934B84 /* ofxBox2dSoftBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBox2dSoftBody.h; sourceTree = "<group>"; };
 		C6BDEC7012FD225600934B84 /* ofxBox2dUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBox2dUtils.h; sourceTree = "<group>"; };
-		C6BDED9912FD273400934B84 /* holler_logo_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = holler_logo_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C6BDED9912FD273400934B84 /* holler_logo_2Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = holler_logo_2Debug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
 		E45BE9730E8CC7DD009D7055 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
@@ -938,7 +938,7 @@
 				BB4B014C10F69532006C3DED /* addons */,
 				E4C2422310CC54B6004149E2 /* openFrameworks */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
-				C6BDED9912FD273400934B84 /* holler_logo_2.app */,
+				C6BDED9912FD273400934B84 /* holler_logo_2Debug.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -978,7 +978,7 @@
 			);
 			name = holler_logo_2;
 			productName = myOFApp;
-			productReference = C6BDED9912FD273400934B84 /* holler_logo_2.app */;
+			productReference = C6BDED9912FD273400934B84 /* holler_logo_2Debug.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

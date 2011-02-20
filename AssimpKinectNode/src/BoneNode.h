@@ -14,7 +14,7 @@
 #include "ofxAssimpModelLoader.h"
 #include "ofxOpenNI.h"
 
-class BoneNode : public ofMeshNode {
+class BoneNode : public ofNode {
 	
 public:
 	

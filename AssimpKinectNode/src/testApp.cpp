@@ -13,11 +13,13 @@ void testApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofDisableArbTex();
 	ofSetVerticalSync(true);
+	
 	//some model / light stuff
     glShadeModel(GL_SMOOTH);
 	
 	astroboy.load();
 	astroboy.setPosition(300, 300, 500);
+	
 	initArmature();
 	
 	cam.setFov(60);

@@ -13,7 +13,7 @@
 #include "ofMain.h"
 #include "ofxAssimpModelLoader.h"
 
-class Model : public ofMeshNode {
+class Model : public ofNode {
 
 public:
 	
@@ -21,7 +21,7 @@ public:
 	}
 	
 	void load() {
-		model.loadModel("astroboy.dae");
+		model.loadModel("astroboy_walk.dae");
 		listBones();
 	}
 	
