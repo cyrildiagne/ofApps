@@ -23,14 +23,15 @@ public:
 	
 	UserPointCloud();
 	
-	void init(ofxDepthGenerator& depth, ofxImageGenerator& image, ofxUserGenerator& user);
+	void init(ofxONI & ni);
 	
 	void update();
 	
-	void draw(bool bDrawBones);
+	void draw();
+    void drawBones();
 	
 	bool bBonesInit;
-	
+    
 private:
 	
 	void initBones();

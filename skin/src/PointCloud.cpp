@@ -13,15 +13,6 @@ PointCloud::PointCloud() {
 	
 	numUserPixels=0;
 	
-	mesh.primitives.push_back(ofPrimitive());
-	data = &mesh.primitives[0];
-	data->setMode(OF_TRIANGLES_MODE);
-	
-	setMesh(&mesh);
-	setRenderMethod(OF_MESH_USING_VBO);
-	setDrawType(GL_DYNAMIC_DRAW);
-	
-	
 	shaderFile = "shaders/pointcloud";
 }
 
@@ -30,15 +21,14 @@ PointCloud::~PointCloud() {
 	
 }
 
-void PointCloud::init(ofxDepthGenerator& depth, ofxImageGenerator& image, ofxUserGenerator& user, int type) {
+void PointCloud::init(ofxONI & oni, int type) {
 	
-	this->depth = &depth;
-	this->user = &user;
-	this->image = &image;
+	this->depth = &oni.depth;
+	this->user = &oni.user;
+	this->image = &oni.image;
+    
 	this->type = type;
-	
-	img.loadImage("test.jpg");
-	
+		
 	shader.setup(shaderFile);
 }
 
@@ -52,7 +42,7 @@ void PointCloud::update() {
 	
 	numUserPixels=0;
 	
-	data->clear();
+	clear();
 	
 	if (type==POINTCLOUD_SCENE || type==POINTCLOUD_BG && !bUserInScene) {
 		
@@ -65,7 +55,7 @@ void PointCloud::update() {
 				projective[numUserPixels].Y = y;
 				projective[numUserPixels].Z = *depthPixels;
 				
-				//data->addColor(ofColor(imagePixels[texture]/255.f, imagePixels[texture+1]/255.f, imagePixels[texture+2]/255.f));
+				addColor(ofColor(imagePixels[texture]/255.f, imagePixels[texture+1]/255.f, imagePixels[texture+2]/255.f));
 				
 				/*
 				 faces.push_back(Face(	&vertices[pos],
@@ -103,8 +93,8 @@ void PointCloud::update() {
 					projective[numUserPixels].Y = y;
 					projective[numUserPixels].Z = *depthPixels ;
 					
-					//data->addColor(ofColor(imagePixels[texture]/255.f, imagePixels[texture+1]/255.f, imagePixels[texture+2]/255.f));
-					
+                    addColor(ofColor(imagePixels[texture]/255.f, imagePixels[texture+1]/255.f, imagePixels[texture+2]/255.f));
+                    
 					numUserPixels++;
 				}
 			}
@@ -123,9 +113,10 @@ void PointCloud::update() {
 	for(int i=0; i<numUserPixels; i++) {
 		
 		pt = &realworld[i];
-		data->addVertex(ofPoint(pt->X, pt->Y, pt->Z));
-		data->addTexCoord(ofVec2f(projective[i].X, projective[i].Y));
+		addVertex(ofPoint(pt->X, pt->Y, pt->Z));
+		addTexCoord(ofVec2f(projective[i].X, projective[i].Y));
 		
+        /*
 		if(!isUserCloud) {
 			
 			int x = (int)projective[i].X;
@@ -136,14 +127,15 @@ void PointCloud::update() {
 			
 			if( realworld[pos].Z!=0 && realworld[pos+1].Z!=0 && realworld[pos+640+1].Z!=0) {
 			
-			data->addIndex(i);
-			data->addIndex(i+1);
-			data->addIndex(i+640+1);			
+			addIndex(i);
+			addIndex(i+1);
+			addIndex(i+640+1);			
 			
-			data->addIndex(i);
-			data->addIndex(i+640+1);
-			data->addIndex(i+640);
+			addIndex(i);
+			addIndex(i+640+1);
+			addIndex(i+640);
 		}
+        */
 	}
 }
 
@@ -151,21 +143,24 @@ void PointCloud::draw() {
 	
 	//enableColors();
 	
-	enableTexCoords();
-	enableIndices();
+	//enableTexCoords();
+	//enableIndices();
 	
 	shader.begin();
 	
 	int texCoordAttLoc = shader.getAttributeLocation("aTextureCoords");
 	glEnableVertexAttribArray(texCoordAttLoc);
-	glVertexAttribPointer(texCoordAttLoc, 2, GL_FLOAT, false, 0, data->getTexCoordsPointer());
+	glVertexAttribPointer(texCoordAttLoc, 2, GL_FLOAT, false, 0, getTexCoordsPointer());
 	glBindAttribLocation(shader.getProgram(), texCoordAttLoc, "aTextureCoords");
 	
-	//img.getTextureReference().bind();
+    /*
+	img.getTextureReference().bind();
+    
 	int texLoc = glGetUniformLocation(shader.getProgram(), "tex");
 	shader.setUniformTexture("tex", img.getTextureReference(), texLoc);
-	
-	ofMeshRenderer::draw(&mesh, OF_MESH_FILL);
+	*/
+    
+	ofVboMesh::draw(OF_MESH_POINTS);
 	
 	//img.getTextureReference().unbind();
 	

@@ -28,12 +28,11 @@ void Bone::updateCalibPose(){
 
 void Bone::customDraw() {
 	
-	ofSetColor(255, 255, 255);
-	
+	ofSetColor(255, 0, 0);
+
 	glPushMatrix();
 	glTranslatef(0, -length/2, 0);
 	glScalef(30, length, 30);
-	glColor3ub(255, 255, 255);
 	ofBox(0, 0, 0, 1);
 	glPopMatrix();
 }

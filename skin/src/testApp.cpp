@@ -6,40 +6,32 @@ void testApp::setup(){
 	ofSetFrameRate(30);
 	ofBackground(90, 90, 90);
 	
-	//context.setupUsingRecording("SkeletonRec.oni");
 #ifdef PLAYBACK
-	context.setupUsingRecording(ofToDataPath("record.oni"));
+    oni.initWithRecording(ofToDataPath("record.oni"));
 #else
-	context.setup();
-	context.setupUsingXMLFile();
+    oni.initWithXML();
+    oni.depth.getXnDepthGenerator().GetAlternativeViewPointCap().SetViewPoint(oni.image.getXnImageGenerator());
+    recorder.setup(&oni.context, &oni.depth, &oni.image);
 #endif
 	
-	depth.setup(&context);
-	image.setup(&context);
-	user.setup(&context, &depth, &image);
-	depth.toggleRegisterViewport(&image);
-	context.toggleMirror();
-	
-#ifndef PLAYBACK
-	recorder.setup(&context, &depth, &image);
-#endif
-	
-	userPointCloud.init(depth, image, user);
-	bgPointCloud.init(depth, image, user, POINTCLOUD_SCENE);
-	scenePointCloud.init(depth, image, user, POINTCLOUD_SCENE);
+	userPointCloud.init(oni);
+	bgPointCloud.init(oni, POINTCLOUD_SCENE);
+	scenePointCloud.init(oni, POINTCLOUD_SCENE);
 	
 #ifdef EXPORT_VIDEO
 	screen.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR);
 	videoSaver.setCodecQualityLevel(OF_QT_SAVER_CODEC_QUALITY_HIGH);
 	videoSaver.setup(ofGetWidth(), ofGetHeight(), "test_Export.mov");
 #endif
-	
+    
 	ofSetLogLevel(OF_LOG_WARNING);
-	ofDisableArbTex();
+	//ofDisableArbTex();
 	ofSetVerticalSync(true);
 	
-	bOrbit = bDebug = bRecord = false;
-	bRecordBackground = true;
+    bDrawSkinnedUserPointCloud = false;
+    
+	bOrbit = bRecord = false;
+	bRecordBackground = bDebug = true;
 	
 	camFOV = 68.3;
 	distance = 2500;
@@ -57,18 +49,22 @@ void testApp::exit() {
 //--------------------------------------------------------------
 void testApp::update(){
 	
-	context.update();
-	user.update();
+	oni.update();
 	
-	if(bRecordBackground) {
-		bgPointCloud.update();
-		bRecordBackground = false;
-	}
-	
-	if(user.getTrackedUsers().size()==0) {
-		scenePointCloud.update();
-	} else {
+	 if(oni.user.getTrackedUsers().size() > 0) {
+         
+        if(bRecordBackground) {
+            bgPointCloud.update();
+            bRecordBackground = false;
+        }
+         
 		userPointCloud.update();
+         
+        if(!bDrawSkinnedUserPointCloud) scenePointCloud.update();
+         
+	} else {
+        
+        scenePointCloud.update();
 	}
 	
 	if(bOrbit) {
@@ -86,8 +82,8 @@ void testApp::draw(){
 	ofSetColor(255, 255, 255);
 	
 	if (bDebug) {
-		depth.draw(0,0,320,240);
-		image.draw(320, 0, 320, 240);
+		oni.depth.draw(0,0,320,240);
+		oni.image.draw(320, 0, 320, 240);
 	}
 	//user.draw();
 	
@@ -98,11 +94,21 @@ void testApp::draw(){
 		
 	camera.begin();
 	
-	if(user.getTrackedUsers().size()==0) {
-		scenePointCloud.draw();
+	if(oni.user.getTrackedUsers().size()>0) {
+        
+        if (bDrawSkinnedUserPointCloud) {
+            bgPointCloud.draw();
+            userPointCloud.draw();
+        }
+        else {
+            scenePointCloud.draw();
+        }
+
+        if(bDebug) userPointCloud.drawBones();
+    
 	} else {
-		bgPointCloud.draw();
-		userPointCloud.draw(bDebug);
+        
+		scenePointCloud.draw();
 	}
 	
 	camera.end();

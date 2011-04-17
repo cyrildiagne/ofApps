@@ -10,7 +10,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofModel.h"
+#include "ofVboMesh.h"
 #include "ofxOpenNI.h"
 #include "Global.h"
 
@@ -20,14 +20,14 @@ using namespace xn;
 #define POINTCLOUD_BG	 2
 #define POINTCLOUD_USER	 3
 
-class PointCloud : public ofMeshRenderer {
+class PointCloud : public ofVboMesh {
 	
 public:
 	
 	PointCloud();
 	~PointCloud();
 	
-	void init(ofxDepthGenerator& depth, ofxImageGenerator& image, ofxUserGenerator& user, int type);
+	void init(ofxONI& oni, int type);
 	void update();
 	void draw();
 	
@@ -36,16 +36,11 @@ public:
 	
 	string shaderFile;
 	
-	ofImage img;
-	
 protected:
 	
 	ofxDepthGenerator * depth;
 	ofxUserGenerator * user;
 	ofxImageGenerator * image;
-
-	ofMesh mesh;
-	ofPrimitive * data;
 	
 	ofShader shader;
 

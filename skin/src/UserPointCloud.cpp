@@ -15,16 +15,16 @@ UserPointCloud::UserPointCloud() {
 	bBonesInit = false;
 }
 
-void UserPointCloud::init(ofxDepthGenerator& depth, ofxImageGenerator& image, ofxUserGenerator& user) {
+void UserPointCloud::init(ofxONI &oni) {
 	
 	shaderFile = "shaders/userpointcloud";
-	
-	PointCloud::init(depth, image, user, POINTCLOUD_USER);
+    
+	PointCloud::init(oni, POINTCLOUD_USER);
 }
 
 void UserPointCloud::update() {
 	
-	if (user->getTrackedUsers().size()>0) {
+    if (user->getTrackedUsers().size()>0) {
 		if(!bBonesInit) initBones();
 		else updateBones();
 	}
@@ -57,8 +57,7 @@ void UserPointCloud::initBones() {
 	// Update the bones
 	updateBones();
 	
-	for(int i=0; i<kNumTestNodes; i++)
-		bones[i].updateCalibPose();
+	for(int i=0; i<kNumTestNodes; i++) bones[i].updateCalibPose();
 	
 	setBonesLengths();
 	
@@ -70,7 +69,7 @@ void UserPointCloud::initBones() {
 
 void UserPointCloud::setBonesLengths() {
 	
-	setBoneLength(NECK,			 XN_SKEL_NECK);
+	setBoneLength(NECK,			 XN_SKEL_TORSO);
 	setBoneLength(LEFT_SHOULDER, XN_SKEL_LEFT_ELBOW);
 	setBoneLength(LEFT_ELBOW,	 XN_SKEL_LEFT_HAND);
 	setBoneLength(RIGHT_SHOULDER,XN_SKEL_RIGHT_ELBOW);
@@ -94,7 +93,7 @@ void UserPointCloud::initVerticesWeights() {
 		
 		for (int j=0; j<11; j++) {
 			
-			sqDist = bones[j].getPositionAlong(0.5).squareDistance(data->getVertex(i));
+			sqDist = bones[j].getPositionAlong(0.5).squareDistance(getVertex(i));
 			if( sqDist<minDist ) {
 				minDist = sqDist;
 				minId = j;
@@ -157,16 +156,17 @@ void UserPointCloud::updateBones() {
 	}
 }
 
-void UserPointCloud::draw(bool bDrawBones) {
-	
-	if(bDrawBones) {
-		for(int i=0; i<kNumTestNodes; i++) {
-			bones[i].draw();
-		}
-	}
+void UserPointCloud::drawBones() {
+    
+    for(int i=0; i<kNumTestNodes; i++) {
+        bones[i].draw();
+    }
+}
+
+void UserPointCloud::draw() {
 	
 	shader.begin();
-		
+    
 	// we load the bone transforms in the constant table
 	for (int i=0; i<kNumTestNodes; ++i)
 	{
@@ -180,9 +180,8 @@ void UserPointCloud::draw(bool bDrawBones) {
 	glVertexAttribPointer(bIdAttLoc, 1, GL_FLOAT, false, 0, verticesBonesId);
 	glBindAttribLocation(shader.getProgram(), bIdAttLoc, "boneId");
 	
-	ofMeshRenderer::draw(&mesh, OF_MESH_POINTS);
-	
+	ofVboMesh::draw(OF_MESH_POINTS);
+    
 	shader.end();
 	glDisableVertexAttribArray(bIdAttLoc);
-	
 }

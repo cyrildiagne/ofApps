@@ -4,13 +4,13 @@
 #include "ofMain.h"
 #include "ofxOpenNI.h"
 
-#include "ofxQtVideoSaver.h"
+//#include "ofxQtVideoSaver.h"
 
 #include "UserPointCloud.h"
 #include "Bone.h"
 #include "Global.h"
 
-#define PLAYBACK
+//#define PLAYBACK
 //#define EXPORT_VIDEO
 
 using namespace xn;
@@ -24,11 +24,8 @@ public:
 	void draw();
 	void exit();
 	void keyPressed(int key);
-	
-	ofxOpenNIContext	context;
-	ofxImageGenerator	image;
-	ofxDepthGenerator	depth;
-	ofxUserGenerator	user;
+    
+    ofxONI  oni;
 	
 #ifndef PLAYBACK
 	ofxOpenNIRecorder	recorder;
@@ -42,10 +39,13 @@ public:
 	
 private:
 	
-	bool bOrbit, bDebug, bRecord, bRecordBackground;
+	bool bOrbit, bDrawSkinnedUserPointCloud, bDebug, bRecord, bRecordBackground;
 	int distance;
-	
+
+#ifdef EXPORT_VIDEO
 	ofxQtVideoSaver videoSaver;
+#endif
+    
 	ofImage screen;
 	
 	float camFOV;
