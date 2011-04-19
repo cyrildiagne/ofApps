@@ -172,7 +172,8 @@ void UserPointCloud::draw() {
 	{
 	   string boneMatrixUniformName = "boneMatrices["+ofToString(i)+"]";
 	   GLint currentMatrix = glGetUniformLocation(shader.getProgram(), boneMatrixUniformName.c_str());
-	   glUniformMatrix4fv(currentMatrix, 1, GL_FALSE, (bones[i].calibPose * bones[i].getGlobalTransformMatrix()).getPtr());
+        shader.setUniform4fv(boneMatrixUniformName.c_str(), (bones[i].calibPose * bones[i].getGlobalTransformMatrix()).getPtr()), 16);
+        //glUniformMatrix4fv(currentMatrix, 1, GL_FALSE, (bones[i].calibPose * bones[i].getGlobalTransformMatrix()).getPtr());
 	}
 	
 	int bIdAttLoc = shader.getAttributeLocation("boneId");

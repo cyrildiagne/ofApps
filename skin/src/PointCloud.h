@@ -38,6 +38,7 @@ public:
 	
 protected:
 	
+    ofxONI * oni;
 	ofxDepthGenerator * depth;
 	ofxUserGenerator * user;
 	ofxImageGenerator * image;

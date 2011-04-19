@@ -10,7 +10,7 @@
 #include "Bone.h"
 #include "Global.h"
 
-//#define PLAYBACK
+#define PLAYBACK
 //#define EXPORT_VIDEO
 
 using namespace xn;

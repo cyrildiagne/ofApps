@@ -23,12 +23,13 @@ PointCloud::~PointCloud() {
 
 void PointCloud::init(ofxONI & oni, int type) {
 	
+    this->oni = &oni;
 	this->depth = &oni.depth;
 	this->user = &oni.user;
 	this->image = &oni.image;
     
 	this->type = type;
-		
+    
 	shader.setup(shaderFile);
 }
 
@@ -55,7 +56,7 @@ void PointCloud::update() {
 				projective[numUserPixels].Y = y;
 				projective[numUserPixels].Z = *depthPixels;
 				
-				addColor(ofColor(imagePixels[texture]/255.f, imagePixels[texture+1]/255.f, imagePixels[texture+2]/255.f));
+				//addColor(ofColor(imagePixels[texture]/255.f, imagePixels[texture+1]/255.f, imagePixels[texture+2]/255.f));
 				
 				/*
 				 faces.push_back(Face(	&vertices[pos],
@@ -93,7 +94,7 @@ void PointCloud::update() {
 					projective[numUserPixels].Y = y;
 					projective[numUserPixels].Z = *depthPixels ;
 					
-                    addColor(ofColor(imagePixels[texture]/255.f, imagePixels[texture+1]/255.f, imagePixels[texture+2]/255.f));
+                    //addColor(ofColor(imagePixels[texture]/255.f, imagePixels[texture+1]/255.f, imagePixels[texture+2]/255.f));
                     
 					numUserPixels++;
 				}
@@ -141,28 +142,19 @@ void PointCloud::update() {
 
 void PointCloud::draw() {
 	
-	//enableColors();
-	
-	//enableTexCoords();
-	//enableIndices();
-	
 	shader.begin();
 	
 	int texCoordAttLoc = shader.getAttributeLocation("aTextureCoords");
 	glEnableVertexAttribArray(texCoordAttLoc);
 	glVertexAttribPointer(texCoordAttLoc, 2, GL_FLOAT, false, 0, getTexCoordsPointer());
 	glBindAttribLocation(shader.getProgram(), texCoordAttLoc, "aTextureCoords");
-	
-    /*
-	img.getTextureReference().bind();
     
-	int texLoc = glGetUniformLocation(shader.getProgram(), "tex");
-	shader.setUniformTexture("tex", img.getTextureReference(), texLoc);
-	*/
+    glActiveTexture(GL_TEXTURE0);
+	oni->image.getTextureReference().bind();
+	shader.setUniform1i("tex", 0);
+    oni->image.getTextureReference().unbind();
     
 	ofVboMesh::draw(OF_MESH_POINTS);
 	
-	//img.getTextureReference().unbind();
-	
-	shader.end();
+    shader.end();
 }

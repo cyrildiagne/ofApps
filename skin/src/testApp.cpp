@@ -25,10 +25,9 @@ void testApp::setup(){
 #endif
     
 	ofSetLogLevel(OF_LOG_WARNING);
-	//ofDisableArbTex();
 	ofSetVerticalSync(true);
 	
-    bDrawSkinnedUserPointCloud = false;
+    bDrawSkinnedUserPointCloud = true;
     
 	bOrbit = bRecord = false;
 	bRecordBackground = bDebug = true;
